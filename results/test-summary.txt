@@ -1,0 +1,6 @@
+daa.GeneratorTest: tests=2, failures=0, errors=0, skipped=0
+daa.GraphDsuTest: tests=5, failures=0, errors=0, skipped=0
+daa.MstTest: tests=4, failures=0, errors=0, skipped=0
+daa.PathsTest: tests=5, failures=0, errors=0, skipped=0
+daa.SccTest: tests=3, failures=0, errors=0, skipped=0
+TOTAL: 19 tests, 0 failures, 0 errors, 0 skipped

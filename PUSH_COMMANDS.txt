@@ -1,0 +1,6 @@
+From the project root, publish the prepared branches and release tag:
+
+git push -u origin main feature/dsu feature/mst feature/scc feature/paths feature/metrics
+git push origin v1.0
+
+Then check https://github.com/bekzatdemeuov00-source/Assignment3-DAA/tree/main and the Releases / Tags page.
