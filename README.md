@@ -1,42 +1,34 @@
 # DAA Assignment 3 — Graph Algorithms
 
-Java 17+ Maven project. Includes adjacency-list Graph, DSU (union by size + path compression), minimum spanning forest by Kruskal and Prim, iterative Kosaraju SCC, Kahn topological sorting and shortest paths in a DAG (including negative weights).
+**Bekzat Demeuov | SE-2509**  
+Repository: https://github.com/bekzatdemeuov00-source/Assignment3-DAA  
+Java 17+ Maven project. Includes adjacency-list Graph, counted DSU (union by size + path compression), Kruskal and Prim minimum spanning forests, iterative Kosaraju and Tarjan SCC, Kahn topological sorting, DAG shortest paths (including negative weights), and SCC condensation with longest critical paths.
 
 ## Commands
 
-```bash
-mvn test
-mvn exec:java -Dexec.jvmArgs="-Xmx3g"
+Run everything from the project root with Python 3.10+, Java 17+, and matplotlib:
+
+```powershell
+python -m pip install -r scripts/requirements.txt
+python scripts/reproduce.py
 ```
 
-Alternatively without Maven (benchmark only):
-
-```bash
-javac -d out src/main/java/daa/*.java
-java -Xmx3g -cp out daa.Benchmark
-```
-
-Run these from the project root. The benchmark outputs `results/results.csv`, checking agreement between the MST algorithms and validating topological orders. Each algorithm is timed five times and the median is recorded. `data/` holds disconnected, cyclic and DAG examples.
+This one command builds the project, runs all JUnit tests, checks all ten reference triples, writes 50 benchmark rows and 10 Tarjan rows, and regenerates the ratio/slope analysis and three plots. Maven is downloaded automatically by the checked-in wrapper. To run just tests: `./mvnw test` (Windows: `.\mvnw.cmd test`). To run the self-checking full benchmark after tests: `./mvnw -Pbenchmark verify` (Windows: `.\mvnw.cmd -Pbenchmark verify`). To inspect a sample: `./mvnw -q -DskipTests package`, then `java -cp target/classes daa.Demo data/dag.txt`.
 
 ## Files
 
-- `src/main/java/daa/Graph.java`: graph storage and file parser
-- `src/main/java/daa/DSU.java`: union/find
-- `src/main/java/daa/Algorithms.java`: graph algorithms
-- `src/main/java/daa/Metrics.java`: operation counters
-- `src/main/java/daa/Generator.java`: seeded graph generation
-- `src/main/java/daa/Benchmark.java`: measurements and CSV
-- `src/test/java/daa/AlgorithmsTest.java`: JUnit 5 checks
-- `results/plots/`: measurement figures
-
-## Important validation note
-
-The generated results currently **do not match** the assignment's exact reference values. The generator's random-number consumption/order needs to be reconciled with the instructor's implementation before claiming reference parity. MST algorithms agree with each other on the generated graphs. The JUnit tests are included but Maven was not available in the build environment, so `mvn test` has not been independently run here.
+- `src/main/java/daa/graph/Graph.java`, `algorithms/`, `metrics/`, `benchmark/`: graph, algorithms, counters and reproducible benchmark
+- `src/test/java/daa/`: 19 JUnit 5 tests, including brute force and stack safety
+- `results/results.csv`: 50 core measurements; `results/bonus_results.csv`: 10 Tarjan measurements
+- `results/normalized.csv`, `results/slopes.csv`: counter formulas and fitted slopes
+- `results/plots/`: the three required figures; `results/environment.txt`: measured runtime environment
+- `REPORT.md`: five-section report with proofs, complexity, tables and plots
+- `data/`: four small examples, including disconnected and cyclic graphs
 
 ## AI acknowledgement
 
-AI assistance was used for creating initial source code, tests, documentation and data visualization. All code and results should be reviewed and understood before academic submission and defense.
+AI assistance was used to help implement and document this assignment and to prepare its plots. Bekzat Demeuov is responsible for reviewing and understanding the submitted code, results, proofs, and complexity explanations before the defense.
 
-## Git workflow to complete locally
+## Git branches and release
 
-Create and push your own repository, feature branches and tag `v1.0`. Repository history and upload to Moodle cannot be fabricated by an archive.
+Branches: `main`, `feature/dsu`, `feature/mst`, `feature/scc`, `feature/paths`, `feature/metrics`. Release tag: `v1.0`. To publish, run `git push -u origin main feature/dsu feature/mst feature/scc feature/paths feature/metrics`, then `git push origin v1.0`.

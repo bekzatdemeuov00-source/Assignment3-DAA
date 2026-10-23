@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCAL_PACKAGES = ROOT / ".tools" / "python"
@@ -65,6 +66,21 @@ def validate():
                 assert 1 <= row["max_depth"] <= n
     return rows, bonus, expected
 
+def write_test_summary():
+    paths = sorted((ROOT / "target/surefire-reports").glob("TEST-*.xml"))
+    assert paths, "Run Maven tests before creating the test summary"
+    total = failed = errors = skipped = 0
+    lines = []
+    for path in paths:
+        suite = ET.parse(path).getroot()
+        tests, failures, suite_errors, suite_skipped = [int(suite.get(k, 0)) for k in
+                                                        ["tests", "failures", "errors", "skipped"]]
+        total += tests; failed += failures; errors += suite_errors; skipped += suite_skipped
+        lines.append(f'{suite.get("name")}: tests={tests}, failures={failures}, errors={suite_errors}, skipped={suite_skipped}')
+    assert total == 19 and failed == errors == skipped == 0, "JUnit test suite failed"
+    lines.append(f"TOTAL: {total} tests, {failed} failures, {errors} errors, {skipped} skipped")
+    (ROOT / "results/test-summary.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
 def groups(rows):
     return {(a,d): sorted([r for r in rows if r["algorithm"] == a and r["density"] == d],
                           key=lambda r: r["n"])
@@ -72,6 +88,7 @@ def groups(rows):
 
 def main():
     rows, bonus, expected = validate()
+    write_test_summary()
     grouped = groups(rows)
     out = ROOT / "results"
     plots = out / "plots"
