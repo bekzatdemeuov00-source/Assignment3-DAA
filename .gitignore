@@ -1,0 +1,10 @@
+target/
+out/
+.tools/
+.scratch/
+.idea/
+*.iml
+*.log
+*.zip
+*.bundle
+__pycache__/
